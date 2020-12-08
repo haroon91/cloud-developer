@@ -18,13 +18,22 @@ router.get('/', async (req: Request, res: Response) => {
 
 //@TODO
 //Add an endpoint to GET a specific resource by Primary Key
+router.get('/:id', async (req: Request, res: Response) => {
+    let { id } = req.params;
+    const item = await FeedItem.findByPk(id);
+    res.send(item);
+});
 
 // update a specific resource
 router.patch('/:id', 
     requireAuth, 
     async (req: Request, res: Response) => {
         //@TODO try it yourself
-        res.send(500).send("not implemented")
+        const { id } = req.params;
+        const body = req.body;
+
+        const [ result ] = await FeedItem.update(body,{ where: { id: id } });
+        res.status(201).send('');
 });
 
 
@@ -46,7 +55,7 @@ router.post('/',
     const caption = req.body.caption;
     const fileName = req.body.url;
 
-    // check Caption is valid
+    // check Caption is validc
     if (!caption) {
         return res.status(400).send({ message: 'Caption is required or malformed' });
     }
